@@ -18,7 +18,11 @@ function Gameboard()
 
         const selectedCell = board[row][column];
 
-        if(selectedCell.getValue() != 0 ) return;
+        if(selectedCell.getValue() != 0 )
+            {
+                switchPlayerTurn();
+                return;
+            } 
     
         const markedCell = selectedCell.addMark(player);
     };
@@ -57,7 +61,7 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             name: playerOneName, mark: "X"
         },
         {
-            name: playerTwoName, mark: "0"
+            name: playerTwoName, mark: "O"
         }
     ];
 
