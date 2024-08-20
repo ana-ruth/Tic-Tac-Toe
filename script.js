@@ -18,6 +18,7 @@ function Gameboard()
 
         const selectedCell = board[row][column];
 
+        //If cell is already marked, don't change of turn, keep the same player to pick a different cell
         if(selectedCell.getValue() != 0 )
             {
                 switchPlayerTurn();
@@ -65,6 +66,8 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
         }
     ];
 
+    let gameEndStatus = false;
+
     let activePlayer = players[0];
 
     const switchPlayerTurn = () => {
@@ -79,17 +82,48 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
     };
     
     const playRound = (row,column) => {
+        
+        const boardGame = board.getBoard();
+
+        if(boardGame[0][0].getValue() != 0)//&& boardGame[0][0]===boardGame[0][1] && boardGame[0][1]===boardGame[0][2])
+        {
+            console.log("winner");
+            gameEndStatus = true;
+            return;
+        }
+
+
+       ////////////////////// 
         console.log(`Marking ${getActivePlayer().name}'s ${getActivePlayer().mark} into cell[${row}][${column}]... `);
 
     board.markPlace(row,column,getActivePlayer().mark);
 
 
     //win logic/////////////////
+    /*
+        const boardGame = board.getBoard();
+
+        for(let i = 0; i < 3; i++)
+        {
+            const cell1 = boardGame[i][0].getValue();
+            const cell2 = boardGame[i][1].getValue();
+            const cell3 = boardGame[i][2].getValue();
+            if((cell1 === 'X' || cell1 === 'O') && cell1 === cell2 === cell3)
+            {
+                console.log( "Winner");
+                return;
+            }
+
+        }*/
+
+
 
     switchPlayerTurn();
     printNewRound();
+
   };
   
+
   printNewRound();
 
   return{
@@ -139,6 +173,7 @@ function Screen()
       boardDiv.addEventListener("click", clickHandlerBoard);
     
       updateScreen();
+
 
 }
 
