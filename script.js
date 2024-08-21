@@ -85,37 +85,48 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
         
         const boardGame = board.getBoard();
 
-        if(boardGame[0][0].getValue() != 0)//&& boardGame[0][0]===boardGame[0][1] && boardGame[0][1]===boardGame[0][2])
-        {
-            console.log("winner");
+        //check for three in a row win
+        for(let i = 0; i < 3; i++) {
+            const cell1 = boardGame[i][0].getValue();
+            const cell2 = boardGame[i][1].getValue();
+            const cell3 = boardGame[i][2].getValue();
+            if((cell1 !=0) && cell1 === cell2 && cell2=== cell3) {
+                console.log( "winner");
+                gameEndStatus = true;
+                return;
+            }
+
+        }
+
+        //check for three in a column win
+        for(let i = 0; i < 3; i++) {
+            const cell1 = boardGame[0][i].getValue();
+            const cell2 = boardGame[1][i].getValue();
+            const cell3 = boardGame[2][i].getValue();
+            if((cell1 !=0) && cell1 === cell2 && cell2=== cell3) {
+                console.log( "winner");
+                gameEndStatus = true;
+                return;
+            }
+        }
+
+        // check for  three in diagonal( \ ) win
+        if(boardGame[0][0].getValue()!=0 && boardGame[0][0].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][2].getValue()){
+            console.log( "winner");
+            gameEndStatus = true;
+            return;
+        }
+
+        // check for  three in diagonal( / ) win
+        if(boardGame[0][2].getValue()!=0 && boardGame[0][2].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][0].getValue()){
+            console.log( "winner");
             gameEndStatus = true;
             return;
         }
 
 
-       ////////////////////// 
-        console.log(`Marking ${getActivePlayer().name}'s ${getActivePlayer().mark} into cell[${row}][${column}]... `);
-
+    console.log(`Marking ${getActivePlayer().name}'s ${getActivePlayer().mark} into cell[${row}][${column}]... `);
     board.markPlace(row,column,getActivePlayer().mark);
-
-
-    //win logic/////////////////
-    /*
-        const boardGame = board.getBoard();
-
-        for(let i = 0; i < 3; i++)
-        {
-            const cell1 = boardGame[i][0].getValue();
-            const cell2 = boardGame[i][1].getValue();
-            const cell3 = boardGame[i][2].getValue();
-            if((cell1 === 'X' || cell1 === 'O') && cell1 === cell2 === cell3)
-            {
-                console.log( "Winner");
-                return;
-            }
-
-        }*/
-
 
 
     switchPlayerTurn();
