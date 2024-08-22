@@ -65,10 +65,9 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             name: playerTwoName, mark: "O"
         }
     ];
-///////////
+
     let gameEndStatus = false;
     let winner = players[0];
-//////////
 
     let activePlayer = players[0];
 
@@ -84,11 +83,10 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
     };
 
     
-    /////////////////// 
     const winnerPlayer = () =>{
         winner = activePlayer === players[0] ? players[1] : players[0];
     }
-    
+
     const getWinnerPlayer = () => winner.name;
 
     
@@ -97,9 +95,27 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
         const boardGame = board.getBoard();
 
         console.log(`Marking ${getActivePlayer().name}'s ${getActivePlayer().mark} into cell[${row}][${column}]... `);
-        board.markPlace(row,column,getActivePlayer().mark);
-    
-    
+
+        //if winner is not found mark "X" and "O";
+        if(gameEndStatus!=true) {
+            board.markPlace(row,column,getActivePlayer().mark);
+        }
+
+
+        //Check for tie
+        let numOfCells = 0;
+        boardGame.forEach((row) => {
+            row.forEach((cell) => {
+                if(cell.getValue() === "X" || cell.getValue() === "O")
+                {
+                    numOfCells +=1;
+                }
+            })
+        })
+        if(numOfCells === 9) {
+            gameEndStatus = true;
+            return "Tie";
+        }
 
         //check for three in a row win
         for(let i = 0; i < 3; i++) {
@@ -139,6 +155,7 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             gameEndStatus = true;
             return getWinnerPlayer();
         }
+
 
 
         
@@ -183,11 +200,15 @@ function Screen()
         })
 
         /////////////////////////
-        if(winner != null){
-            playerTurn.textContent = `${winner} Won!`;
+        if(winner != null && winner != "Tie"){
+            playerTurn.textContent = `${winner} WON!`;
             return;
         }
 
+        if(winner === "Tie"){
+            playerTurn.textContent = "It's a TIE.";
+            return;
+        }
     }
 
 
