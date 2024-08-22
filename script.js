@@ -65,8 +65,10 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             name: playerTwoName, mark: "O"
         }
     ];
-
+///////////
     let gameEndStatus = false;
+    let winner = players[0];
+//////////
 
     let activePlayer = players[0];
 
@@ -80,10 +82,24 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
         board.printBoard();
         console.log(`${getActivePlayer().name}'s turn.`);
     };
+
+    
+    /////////////////// 
+    const winnerPlayer = () =>{
+        winner = activePlayer === players[0] ? players[1] : players[0];
+    }
+    
+    const getWinnerPlayer = () => winner.name;
+
     
     const playRound = (row,column) => {
         
         const boardGame = board.getBoard();
+
+        console.log(`Marking ${getActivePlayer().name}'s ${getActivePlayer().mark} into cell[${row}][${column}]... `);
+        board.markPlace(row,column,getActivePlayer().mark);
+    
+    
 
         //check for three in a row win
         for(let i = 0; i < 3; i++) {
@@ -93,7 +109,7 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             if((cell1 !=0) && cell1 === cell2 && cell2=== cell3) {
                 console.log( "winner");
                 gameEndStatus = true;
-                return;
+                return getWinnerPlayer();
             }
 
         }
@@ -106,7 +122,7 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             if((cell1 !=0) && cell1 === cell2 && cell2=== cell3) {
                 console.log( "winner");
                 gameEndStatus = true;
-                return;
+                return getWinnerPlayer();
             }
         }
 
@@ -114,31 +130,27 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
         if(boardGame[0][0].getValue()!=0 && boardGame[0][0].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][2].getValue()){
             console.log( "winner");
             gameEndStatus = true;
-            return;
+            return getWinnerPlayer();
         }
 
         // check for  three in diagonal( / ) win
         if(boardGame[0][2].getValue()!=0 && boardGame[0][2].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][0].getValue()){
             console.log( "winner");
             gameEndStatus = true;
-            return;
+            return getWinnerPlayer();
         }
 
 
-    console.log(`Marking ${getActivePlayer().name}'s ${getActivePlayer().mark} into cell[${row}][${column}]... `);
-    board.markPlace(row,column,getActivePlayer().mark);
-
-
-    switchPlayerTurn();
-    printNewRound();
-
+        
+        switchPlayerTurn();
+        printNewRound();
   };
   
 
   printNewRound();
 
-  return{
-    playRound, getActivePlayer,
+  return{                           
+    playRound, getActivePlayer,  winnerPlayer, getWinnerPlayer,
     getBoard: board.getBoard
   };
 
@@ -150,7 +162,7 @@ function Screen()
     const playerTurn = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
 
-    const updateScreen = () => {
+    const updateScreen = (winner) => {
         boardDiv.textContent = "";
 
         const board = game.getBoard();
@@ -169,6 +181,13 @@ function Screen()
                 boardDiv.appendChild(cellButton);
             })
         })
+
+        /////////////////////////
+        if(winner != null){
+            playerTurn.textContent = `${winner} Won!`;
+            return;
+        }
+
     }
 
 
@@ -177,10 +196,11 @@ function Screen()
         const selectedRow = e.target.dataset.row;
 
         if (!selectedColumn || !selectedRow) return;
-        
-        game.playRound(selectedRow,selectedColumn);
-        updateScreen();
+        /////////////
+        let round = game.playRound(selectedRow,selectedColumn);
+        updateScreen(round);
       }
+
       boardDiv.addEventListener("click", clickHandlerBoard);
     
       updateScreen();
