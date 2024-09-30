@@ -6,12 +6,39 @@
     <title>Tic-Tac-Toe</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
 
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
+
 </head>
 <body>
+
+    <div class="container1">
+        <h1 class="title">TIC TAC TOE</h1>
+
+        <form id="Form">
+            <div class="input">
+                <label for="player1">Player 1</label>
+                <input type="text" id="player1" name="player1"> <br>
+            </div>
+
+            <div class="input">
+                <label for="player2">Player 2</label>
+                <input type="text" id="player2" name="player2"> <br>
+            </div>
+
+           <!-- <button type="submit">START</button> --> 
+            <button type="button" onclick="Screen()">START</button>
+
+        </form>
+    </div>
+
     <div class="container">
-        <h1 class="turn"></div>
+        <h1 class="turn"></h1>
         <div class="board"></div>
-      </div> 
+    </div>
+ 
 
     <script src="script.js"></script>
 </body>

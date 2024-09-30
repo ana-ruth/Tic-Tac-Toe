@@ -19,7 +19,7 @@ function Gameboard()
         const selectedCell = board[row][column];
 
         //If cell is already marked, don't change of turn, keep the same player to pick a different cell
-        if(selectedCell.getValue() != 0 )
+        if(selectedCell.getValue() != " " )
             {
                 switchPlayerTurn();
                 return;
@@ -39,7 +39,7 @@ function Gameboard()
 
 function Cell()
 {
-    let value = 0;
+    let value = " ";
 
     const addMark = (player) => {
         value = player;
@@ -67,8 +67,6 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
     ];
 
     let gameEndStatus = false;
-    let winner = players[0];
-
     let activePlayer = players[0];
 
     const switchPlayerTurn = () => {
@@ -82,12 +80,7 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-    
-    const winnerPlayer = () =>{
-        winner = activePlayer === players[0] ? players[1] : players[0];
-    }
-
-    const getWinnerPlayer = () => winner.name;
+    const getWinnerPlayer = () => activePlayer.name;
 
     
     const playRound = (row,column) => {
@@ -101,6 +94,43 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             board.markPlace(row,column,getActivePlayer().mark);
         }
 
+        //check for three in a row win
+        for(let i = 0; i < 3; i++) {
+            const cell1 = boardGame[i][0].getValue();
+            const cell2 = boardGame[i][1].getValue();
+            const cell3 = boardGame[i][2].getValue();
+            if((cell1 !=" ") && cell1 === cell2 && cell2=== cell3) {
+                console.log( "winner");
+                gameEndStatus = true;
+                return getWinnerPlayer();
+            }
+        }
+
+        //check for three in a column win
+        for(let i = 0; i < 3; i++) {
+            const cell1 = boardGame[0][i].getValue();
+            const cell2 = boardGame[1][i].getValue();
+            const cell3 = boardGame[2][i].getValue();
+            if((cell1 !=" ") && cell1 === cell2 && cell2=== cell3) {
+                console.log( "winner");
+                gameEndStatus = true;
+                return getWinnerPlayer();
+            }
+        }
+
+        // check for  three in diagonal( \ ) win
+        if(boardGame[0][0].getValue()!=" " && boardGame[0][0].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][2].getValue()){
+            console.log( "winner");
+            gameEndStatus = true;
+            return getWinnerPlayer();
+        }
+
+        // check for  three in diagonal( / ) win
+        if(boardGame[0][2].getValue()!=" " && boardGame[0][2].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][0].getValue()){
+            console.log( "winner");
+            gameEndStatus = true;
+            return getWinnerPlayer();
+        }
 
         //Check for tie
         let numOfCells = 0;
@@ -117,47 +147,6 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
             return "Tie";
         }
 
-        //check for three in a row win
-        for(let i = 0; i < 3; i++) {
-            const cell1 = boardGame[i][0].getValue();
-            const cell2 = boardGame[i][1].getValue();
-            const cell3 = boardGame[i][2].getValue();
-            if((cell1 !=0) && cell1 === cell2 && cell2=== cell3) {
-                console.log( "winner");
-                gameEndStatus = true;
-                return getWinnerPlayer();
-            }
-
-        }
-
-        //check for three in a column win
-        for(let i = 0; i < 3; i++) {
-            const cell1 = boardGame[0][i].getValue();
-            const cell2 = boardGame[1][i].getValue();
-            const cell3 = boardGame[2][i].getValue();
-            if((cell1 !=0) && cell1 === cell2 && cell2=== cell3) {
-                console.log( "winner");
-                gameEndStatus = true;
-                return getWinnerPlayer();
-            }
-        }
-
-        // check for  three in diagonal( \ ) win
-        if(boardGame[0][0].getValue()!=0 && boardGame[0][0].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][2].getValue()){
-            console.log( "winner");
-            gameEndStatus = true;
-            return getWinnerPlayer();
-        }
-
-        // check for  three in diagonal( / ) win
-        if(boardGame[0][2].getValue()!=0 && boardGame[0][2].getValue() == boardGame[1][1].getValue() && boardGame[1][1].getValue() == boardGame[2][0].getValue()){
-            console.log( "winner");
-            gameEndStatus = true;
-            return getWinnerPlayer();
-        }
-
-
-
         
         switchPlayerTurn();
         printNewRound();
@@ -167,15 +156,40 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
   printNewRound();
 
   return{                           
-    playRound, getActivePlayer,  winnerPlayer, getWinnerPlayer,
+    playRound, getActivePlayer, getWinnerPlayer,
     getBoard: board.getBoard
   };
 
 }
 
+function Players(){
+    var player1;
+    var player2;
+
+
+     player1 = document.getElementById('player1').value;
+     player2 = document.getElementById('player2').value;
+
+
+    /*
+
+    const form = document.getElementById("Form");
+    form.addEventListener('submit',(event)=>{
+        player1 = form.getElementById("player1").textContent;
+        console.log(player1);
+        player2 = form.getElementById("player2").value;
+    })
+*/
+    return [player1, player2];
+}
+
 function Screen()
 {
-    const game = GameController();
+    const players = Players();
+    const game = GameController(players[0],players[1]);
+
+   // const game = GameController();
+
     const playerTurn = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
 
@@ -201,6 +215,8 @@ function Screen()
 
         /////////////////////////
         if(winner != null && winner != "Tie"){
+            console.log("Winner is: " + winner);
+            console.log("Active is: "+activePlayer.name);
             playerTurn.textContent = `${winner} WON!`;
             return;
         }
