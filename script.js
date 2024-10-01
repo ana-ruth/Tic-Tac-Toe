@@ -162,36 +162,28 @@ function GameController( playerOneName = "Player One", playerTwoName = "Player T
 
 }
 
+//Get's players' names
 function Players(){
     var player1;
     var player2;
 
-
      player1 = document.getElementById('player1').value;
      player2 = document.getElementById('player2').value;
 
-
-    /*
-
-    const form = document.getElementById("Form");
-    form.addEventListener('submit',(event)=>{
-        player1 = form.getElementById("player1").textContent;
-        console.log(player1);
-        player2 = form.getElementById("player2").value;
-    })
-*/
     return [player1, player2];
 }
 
+
+
 function Screen()
 {
+    //get players and start game
     const players = Players();
     const game = GameController(players[0],players[1]);
 
-   // const game = GameController();
-
     const playerTurn = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+
 
     const updateScreen = (winner) => {
         boardDiv.textContent = "";
@@ -199,7 +191,9 @@ function Screen()
         const board = game.getBoard();
         const activePlayer = game.getActivePlayer();
 
-        playerTurn.textContent = `${activePlayer.name}'s turn...`
+        if(activePlayer.name.length === 0) playerTurn.textContent = "Let's Start!";
+
+        else playerTurn.textContent = `${activePlayer.name}'s turn...`
 
         board.forEach((row, indexR) => {
             row.forEach((cell,indexC) => {
@@ -213,7 +207,7 @@ function Screen()
             })
         })
 
-        /////////////////////////
+        ///Display winner
         if(winner != null && winner != "Tie"){
             console.log("Winner is: " + winner);
             console.log("Active is: "+activePlayer.name);
@@ -221,6 +215,7 @@ function Screen()
             return;
         }
 
+        //display tie
         if(winner === "Tie"){
             playerTurn.textContent = "It's a TIE.";
             return;
