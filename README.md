@@ -1,4 +1,5 @@
 # Tic-Tac-Toe
+Website: https://ana-ruth.github.io/Tic-Tac-Toe/
 
 ## How to play 
 - Players take turns marking a grid with an X or O 
@@ -13,6 +14,7 @@
 ![image](https://github.com/user-attachments/assets/c09733fd-f5b0-4fe9-94eb-c68a92b46b0a)
 
 - Message stating winner
+
 ![image](https://github.com/user-attachments/assets/f184c9f1-f003-4d7d-bc27-61c83abe2f17)
 
 ### Future Features
